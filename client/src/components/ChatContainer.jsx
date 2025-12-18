@@ -4,8 +4,8 @@ import { formatMessageTime } from '../lib/utlis';
 import { ChatContext } from '../../context/ChatContext';
 import { AuthContext } from '../../context/AuthContext';
 
-const ChatContainer = ({ selectedUser, setSelectedUser }) => {
-  const { messages, sendMessages, getMessages } = useContext(ChatContext);
+const ChatContainer = () => {
+  const { messages, sendMessages, getMessages, selectedUser, setSelectedUser } = useContext(ChatContext);
   const { authUser, onlineUsers } = useContext(AuthContext);
 
   const scrollEnd = useRef(null);

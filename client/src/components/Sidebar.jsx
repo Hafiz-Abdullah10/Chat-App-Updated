@@ -4,22 +4,23 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { ChatContext } from '../../context/ChatContext';
 
-const Sidebar = ({ selectedUser }) => {
-  const { getUsers, users = [], setSelectedUser, unseenMessages = {} } = useContext(ChatContext);
-  const { logout, onlineUsers = [] } = useContext(AuthContext);
+const Sidebar = () => {
+
+  const { getUsers, users , selectedUser, setSelectedUser,
+    unseenMessages, setUnseenMessages  }= useContext(ChatContext);
+
+  const { logout, onlineUsers } = useContext(AuthContext);
 
   const [input, setInput] = useState('');
+
   const navigate = useNavigate();
 
-  useEffect(() => {
+    const filteredUsers = input ? users.filter((user) =>user.fullName.toLowerCase().includes(input.toLowerCase()))
+    : users;
+
+useEffect(() => {
     getUsers();
   }, [onlineUsers]);
-
-  const filteredUsers = input
-    ? users.filter((user) =>
-        user.fullName?.toLowerCase().includes(input.toLowerCase())
-      )
-    : users;
 
   return (
     <div className="bg-[#8185B2]/10 flex flex-col h-full p-5 rounded-r-xl text-white overflow-y-auto">
@@ -43,9 +44,7 @@ const Sidebar = ({ selectedUser }) => {
         <div className="bg-[#282142] rounded-full flex items-center gap-2 py-2 px-4 mt-5">
           <img src={assets.search_icon} alt="Search" className="w-3" />
           <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            type="text"
+            onChange={(e) => setInput(e.target.value)} value={input} type="text"
             className="bg-transparent outline-none text-white text-xs flex-1"
             placeholder="Search User"
           />
@@ -58,16 +57,16 @@ const Sidebar = ({ selectedUser }) => {
           <p className="text-center text-gray-400 text-sm">No users found</p>
         )}
 
-        {filteredUsers.map((user) => (
+        {filteredUsers.map((user, index) => (
           <div
-            key={user._id}
+            key={index}
             onClick={() => setSelectedUser(user)}
             className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer
-              ${selectedUser?._id === user._id ? 'bg-[#282142]/50' : ''}`}
+              ${selectedUser?._id === user._id && 'bg-[#282142]/50' }`}
           >
             <img
-              src={user.profilePic || assets.avatar_icon}
-              className="w-[35px] rounded-full"
+              src={user?.profilePic || assets.avatar_icon}
+              className="w-[35px] rounded-full aspect-square"
             />
             <div>
               <p>{user.fullName}</p>
